@@ -70,34 +70,34 @@ jobs:
             admin) echo "DOCKERFILE=docker/Dockerfile.admin" >> $GITHUB_ENV ;;
           esac
 
-      - name: Extract Docker metadata
+      - name: Extract Docker metadata (labels)
         id: meta
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.service }}
 
-      - name: Prepare tags (sanitize metadata)
+      - name: Compute ALL_TAGS deterministically
         run: |
-          raw_tags='${{ steps.meta.outputs.tags }}'
-          # remove surrounding quotes, brackets and whitespace
-          sanitized=$(printf "%s" "$raw_tags" | tr -d '[]' | tr -d '"' | tr -d "'" | xargs)
-          if [ -z "$sanitized" ]; then
-            echo "ALL_TAGS=" >> $GITHUB_ENV
-          else
-            echo "ALL_TAGS=$sanitized" >> $GITHUB_ENV
-          fi
-        shell: bash
+          short_sha=$(echo "${GITHUB_SHA}" | cut -c1-7)
+          base="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.service }}"
+          tags="${base}:${short_sha}"
 
-      - name: Append latest tag on main
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        run: |
-          existing="$ALL_TAGS"
-          newtag="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.service }}:latest"
-          if [ -z "$existing" ]; then
-            echo "ALL_TAGS=${newtag}" >> $GITHUB_ENV
-          else
-            echo "ALL_TAGS=${existing},${newtag}" >> $GITHUB_ENV
+          # add latest when building on main branch
+          if [ "${GITHUB_REF#refs/heads/}" = "main" ]; then
+            tags=",${base}:latest"
+            tags="${base}:${short_sha},${base}:latest"
           fi
+
+          # if this is a tag push, also add the tag name
+          case "${GITHUB_REF}" in
+            refs/tags/*)
+              tagname="${GITHUB_REF#refs/tags/}"
+              tags="${tags},${base}:${tagname}"
+              ;;
+          esac
+
+          # write to env
+          echo "ALL_TAGS=${tags}" >> $GITHUB_ENV
         shell: bash
 
       - name: Build and push Docker image
