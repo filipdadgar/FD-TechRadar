@@ -339,17 +339,17 @@ docker compose up -d --no-deps api
 
 If you just want to try a published service quickly you can pull the image published to GitHub Packages (GitHub Container Registry).
 
-Images are published per-service as `<OWNER/REPO>-<service>` (for this repo the images will be named like `ghcr.io/filipdadgar/FD-TechRadar-api`, `ghcr.io/filipdadgar/FD-TechRadar-web`, etc.). Replace `<OWNER/REPO>` and `<TAG>` with your values.
+Images are published per-service as `<owner/repo>-<service>` (CI lowercases the repository component). For this repo the images will be named like `ghcr.io/filipdadgar/fd-techradar-api`, `ghcr.io/filipdadgar/fd-techradar-web`, etc. Replace `<owner/repo>` and `<tag>` with your values (use lowercase for the repository part).
 
 ```bash
 # pull the published web image (example)
-docker pull ghcr.io/<OWNER/REPO>-web:<TAG>
+docker pull ghcr.io/<owner/repo>-web:<tag>
 
 # run the api image (maps container port 80 → host 5000)
 docker run --rm -p 5000:80 \
   -e POSTGRES_HOST=host.docker.internal -e POSTGRES_PORT=5432 \
   -e POSTGRES_DB=techradar -e POSTGRES_USER=techradar -e POSTGRES_PASSWORD=techradar \
-  ghcr.io/<OWNER/REPO>-api:<TAG>
+  ghcr.io/<owner/repo>-api:<tag>
 
 # then visit http://localhost:5000/api/healthz
 ```

@@ -76,9 +76,16 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.service }}
 
-      - name: Prepare tags (include latest on main)
+      - name: Prepare tags (sanitize metadata)
         run: |
-          echo "ALL_TAGS=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
+          raw_tags='${{ steps.meta.outputs.tags }}'
+          # remove surrounding quotes, brackets and whitespace
+          sanitized=$(printf "%s" "$raw_tags" | tr -d '[]' | tr -d '"' | tr -d "'" | xargs)
+          if [ -z "$sanitized" ]; then
+            echo "ALL_TAGS=" >> $GITHUB_ENV
+          else
+            echo "ALL_TAGS=$sanitized" >> $GITHUB_ENV
+          fi
         shell: bash
 
       - name: Append latest tag on main
