@@ -120,4 +120,13 @@ jobs:
         env:
           TAGS: ${{ env.ALL_TAGS }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
-        run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+        run: |
+          # split the comma-separated tag list and sign each tag individually
+          IFS=',' read -ra _tags <<< "${TAGS}"
+          for t in "${_tags[@]}"; do
+            t=$(echo "$t" | xargs) || true
+            if [ -n "$t" ]; then
+              cosign sign --yes "${t}@${DIGEST}"
+            fi
+          done
+        shell: bash
