@@ -337,25 +337,25 @@ docker compose up -d --no-deps api
 
 ### Use the published image (optional)
 
-If you just want to try the API quickly you can pull the image published to GitHub Packages (GitHub Container Registry).
+If you just want to try a published service quickly you can pull the image published to GitHub Packages (GitHub Container Registry).
 
-Replace `<OWNER/REPO>` and `<TAG>` with your repository and tag (for this repo `filipdadgar/FD-TechRadar` and e.g. `main`):
+Images are published per-service as `<OWNER/REPO>-<service>` (for this repo the images will be named like `ghcr.io/filipdadgar/FD-TechRadar-api`, `ghcr.io/filipdadgar/FD-TechRadar-web`, etc.). Replace `<OWNER/REPO>` and `<TAG>` with your values.
 
 ```bash
-# pull the published image
-docker pull ghcr.io/<OWNER/REPO>:<TAG>
+# pull the published web image (example)
+docker pull ghcr.io/<OWNER/REPO>-web:<TAG>
 
-# run it (maps container port 80 → host 5000)
+# run the api image (maps container port 80 → host 5000)
 docker run --rm -p 5000:80 \
   -e POSTGRES_HOST=host.docker.internal -e POSTGRES_PORT=5432 \
   -e POSTGRES_DB=techradar -e POSTGRES_USER=techradar -e POSTGRES_PASSWORD=techradar \
-  ghcr.io/<OWNER/REPO>:<TAG>
+  ghcr.io/<OWNER/REPO>-api:<TAG>
 
 # then visit http://localhost:5000/api/healthz
 ```
 
 Notes:
-- The image published by the CI is the `api` image built from `docker/Dockerfile.api`.
+- CI now publishes per-service images for `api`, `workers`, `web` and `admin` (built from `docker/Dockerfile.*`).
 - The container listens on the standard HTTP port (80) by default; we map it to `5000` above to avoid conflicts with a local nginx.
 
 ### Build and run locally (single service)
