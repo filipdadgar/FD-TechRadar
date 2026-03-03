@@ -1,0 +1,59 @@
+# .NET / C#
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.rsuser
+.idea/
+*.DotSettings.user
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+
+# EF Core migrations — keep source, ignore runtime artifacts
+# (migrations themselves are committed)
+
+# Node.js / TypeScript / Frontend
+node_modules/
+dist/
+build/
+.next/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment / Secrets
+.env
+docker/.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# Docker runtime
+.dockerignore
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+*~
+.vscode/settings.json
+.vscode/launch.json

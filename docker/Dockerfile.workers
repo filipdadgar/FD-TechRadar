@@ -1,0 +1,22 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /app
+
+COPY backend/TechRadar.slnx ./backend/
+COPY backend/src/TechRadar.Core/TechRadar.Core.csproj ./backend/src/TechRadar.Core/
+COPY backend/src/TechRadar.Data/TechRadar.Data.csproj ./backend/src/TechRadar.Data/
+COPY backend/src/TechRadar.Api/TechRadar.Api.csproj ./backend/src/TechRadar.Api/
+COPY backend/src/TechRadar.Workers/TechRadar.Workers.csproj ./backend/src/TechRadar.Workers/
+COPY backend/tests/TechRadar.Api.Tests/TechRadar.Api.Tests.csproj ./backend/tests/TechRadar.Api.Tests/
+COPY backend/tests/TechRadar.Workers.Tests/TechRadar.Workers.Tests.csproj ./backend/tests/TechRadar.Workers.Tests/
+
+RUN dotnet restore backend/TechRadar.slnx
+
+COPY backend/ ./backend/
+
+RUN dotnet publish backend/src/TechRadar.Workers/TechRadar.Workers.csproj \
+    -c Release -o /out --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+WORKDIR /app
+COPY --from=build /out .
+ENTRYPOINT ["dotnet", "TechRadar.Workers.dll"]

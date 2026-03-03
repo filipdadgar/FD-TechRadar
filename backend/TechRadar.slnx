@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TechRadar.Api/TechRadar.Api.csproj" />
+    <Project Path="src/TechRadar.Core/TechRadar.Core.csproj" />
+    <Project Path="src/TechRadar.Data/TechRadar.Data.csproj" />
+    <Project Path="src/TechRadar.Workers/TechRadar.Workers.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TechRadar.Api.Tests/TechRadar.Api.Tests.csproj" />
+    <Project Path="tests/TechRadar.Workers.Tests/TechRadar.Workers.Tests.csproj" />
+  </Folder>
+</Solution>

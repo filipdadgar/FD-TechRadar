@@ -1,0 +1,22 @@
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+    ports:
+      - "5000:8080"
+    volumes:
+      - ../backend/src:/app/src:ro
+
+  workers:
+    environment:
+      DOTNET_ENVIRONMENT: Development
+    volumes:
+      - ../backend/src:/app/src:ro
