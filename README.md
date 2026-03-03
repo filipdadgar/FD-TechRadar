@@ -335,6 +335,55 @@ docker compose build api
 docker compose up -d --no-deps api
 ```
 
+### Use the published image (optional)
+
+If you just want to try the API quickly you can pull the image published to GitHub Packages (GitHub Container Registry).
+
+Replace `<OWNER/REPO>` and `<TAG>` with your repository and tag (for this repo `filipdadgar/FD-TechRadar` and e.g. `main`):
+
+```bash
+# pull the published image
+docker pull ghcr.io/<OWNER/REPO>:<TAG>
+
+# run it (maps container port 80 → host 5000)
+docker run --rm -p 5000:80 \
+  -e POSTGRES_HOST=host.docker.internal -e POSTGRES_PORT=5432 \
+  -e POSTGRES_DB=techradar -e POSTGRES_USER=techradar -e POSTGRES_PASSWORD=techradar \
+  ghcr.io/<OWNER/REPO>:<TAG>
+
+# then visit http://localhost:5000/api/healthz
+```
+
+Notes:
+- The image published by the CI is the `api` image built from `docker/Dockerfile.api`.
+- The container listens on the standard HTTP port (80) by default; we map it to `5000` above to avoid conflicts with a local nginx.
+
+### Build and run locally (single service)
+
+If you prefer to build the API image locally instead of pulling the published package:
+
+```bash
+# from repo root
+docker build -f docker/Dockerfile.api -t fd-techradar-api:local .
+
+# run it (map to host port 5000)
+docker run --rm -p 5000:80 \
+  -e POSTGRES_HOST=host.docker.internal -e POSTGRES_PORT=5432 \
+  -e POSTGRES_DB=techradar -e POSTGRES_USER=techradar -e POSTGRES_PASSWORD=techradar \
+  fd-techradar-api:local
+```
+
+If you want the exact same image name as the published package, tag it and push to your registry:
+
+```bash
+docker tag fd-techradar-api:local ghcr.io/<OWNER/REPO>:local
+docker push ghcr.io/<OWNER/REPO>:local
+```
+
+### Multiple images / CI behaviour
+
+Currently the GitHub workflow builds and publishes a single image (the API) using `docker/Dockerfile.api` — that's why you saw only one package in GitHub Packages. This is by design in the current workflow. If you'd like, I can update the workflow to build a matrix of images (API, workers, web, admin) or add separate `build-push` steps for each Dockerfile so all services are published. Which images would you like published from CI?
+
 ### Port mapping (production)
 
 | Host port | Service |
