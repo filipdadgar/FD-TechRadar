@@ -9,7 +9,7 @@ A self-hosted tech radar focused on the IoT and connectivity domain. An agent wo
 ## Screenshots
 | Public Radar View | Admin Panel - Entries | 
 |-------------------|-----------------------|
-| ![Radar View](image/view.png) | ![Admin Entries](image/admin.png) | 
+| ![Radar View](images/view.png) | ![Admin Entries](images/admin.png) | 
 
 ---
 
