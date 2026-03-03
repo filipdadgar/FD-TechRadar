@@ -79,7 +79,13 @@ jobs:
       - name: Append latest tag on main
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         run: |
-          echo ",${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.service }}:latest" >> $GITHUB_ENV
+          existing="$ALL_TAGS"
+          newtag="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.service }}:latest"
+          if [ -z "$existing" ]; then
+            echo "ALL_TAGS=${newtag}" >> $GITHUB_ENV
+          else
+            echo "ALL_TAGS=${existing},${newtag}" >> $GITHUB_ENV
+          fi
         shell: bash
 
       - name: Build and push Docker image
