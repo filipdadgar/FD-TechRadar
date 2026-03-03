@@ -96,6 +96,8 @@ jobs:
               ;;
           esac
 
+          # sanitize tags: remove quotes and leading commas
+          tags=$(printf "%s" "$tags" | tr -d '"' | tr -d "'" | sed 's/^,*//')
           # write to env
           echo "ALL_TAGS=${tags}" >> $GITHUB_ENV
         shell: bash
