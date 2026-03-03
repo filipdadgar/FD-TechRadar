@@ -41,7 +41,8 @@ jobs:
 
       - name: Set lowercased IMAGE_NAME
         run: |
-          echo "IMAGE_NAME=$(echo \"${GITHUB_REPOSITORY}\" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          # avoid emitting quotes into the env value
+          echo "IMAGE_NAME=$(echo ${GITHUB_REPOSITORY} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
         shell: bash
 
       - name: Install cosign

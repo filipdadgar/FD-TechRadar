@@ -1,4 +1,6 @@
-# IoT & Connectivity Tech Radar
+[![Docker](https://github.com/filipdadgar/FD-TechRadar/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/filipdadgar/FD-TechRadar/actions/workflows/docker-publish.yml)
+
+ IoT & Connectivity Tech Radar
 
 A self-hosted tech radar focused on the IoT and connectivity domain. An agent worker automatically discovers relevant technologies from RSS feeds and GitHub, queues proposals for admin review, and publishes accepted entries to the public radar.
 
