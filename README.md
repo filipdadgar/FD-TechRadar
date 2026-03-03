@@ -396,35 +396,3 @@ On first startup the API runs EF migrations which seed:
 | DTDL | Standards & Techniques | Assess |
 
 **7 RSS/GitHub data sources** pre-configured for IoT/connectivity content.
-
----
-
-## Moving to a New Repository
-
-The `backend/`, `frontend/`, and `docker/` directories are fully self-contained. To move them to a new repo:
-
-```bash
-# In the new repo root, copy the three directories
-cp -r backend/ frontend/ docker/ .gitignore .dockerignore /path/to/new-repo/
-
-# The docker-compose build context is ".." (repo root), so the directory
-# layout must be preserved exactly as-is.
-```
-
-Files to include:
-
-```
-.gitignore
-.dockerignore
-backend/
-frontend/
-docker/
-```
-
-Files to exclude (spec/planning artefacts, not needed at runtime):
-
-```
-specs/
-.specify/
-.claude/
-```
