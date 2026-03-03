@@ -19,7 +19,7 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ toLower(github.repository) }}
+  IMAGE_NAME: ${{ github.repository }}
 
 
 jobs:
@@ -38,6 +38,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set lowercased IMAGE_NAME
+        run: |
+          echo "IMAGE_NAME=$(echo \"${GITHUB_REPOSITORY}\" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        shell: bash
 
       - name: Install cosign
         if: github.event_name != 'pull_request'
